@@ -9,7 +9,7 @@ module.exports = (sequelize, Sequelize) => {
           autoIncrement: true,
           primaryKey: true,
         },
-        RefundDate:{
+        RequestDate:{
           type: DataTypes.TIMESTAMP,
           allowNull: false,
         },
