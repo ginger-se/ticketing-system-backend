@@ -12,7 +12,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 });
 const db = {};
 db.Sequelize = Sequelize;
-db.sequelize = sequelize
+db.sequelize = sequelize;
 
 db.event = require("./event.model.js")(sequelize, Sequelize);
 db.reservationSeat = require("./reservationSeat.model.js")(sequelize, Sequelize);
