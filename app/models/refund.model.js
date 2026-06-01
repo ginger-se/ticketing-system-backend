@@ -3,12 +3,6 @@ module.exports = (sequelize, Sequelize, DataTypes, Model) => {
 
     Refund.init(
       {
-        // Model attributes are defined here
-        refundId: {
-          type: DataTypes.INTEGER,
-          autoIncrement: true,
-          primaryKey: true,
-        },
         requestDate:{
           type: DataTypes.DATE,
           allowNull: false,

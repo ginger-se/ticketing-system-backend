@@ -3,12 +3,6 @@ module.exports = (sequelize, Sequelize, DataTypes, Model) => {
 
     Payment.init(
       {
-        // Model attributes are defined here
-        paymentId: {
-          type: DataTypes.INTEGER,
-          autoIncrement: true,
-          primaryKey: true,
-        },
         amount: {
           type: DataTypes.DECIMAL(10,2),
           allowNull: false,
