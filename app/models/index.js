@@ -1,5 +1,5 @@
 const dbConfig = require("../config/db.config.js");
-const Sequelize = require("sequelize");
+const {Sequelize, DataTypes, Model} = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
@@ -23,6 +23,9 @@ db.recipeIngredient = require("./recipeIngredient.model.js")(
 );
 db.session = require("./session.model.js")(sequelize, Sequelize);
 db.user = require("./user.model.js")(sequelize, Sequelize);
+db.payment = require("./payment.model.js")(sequelize, Sequelize, DataTypes, Model);
+db.refund = require("./refund.model.js")(sequelize, Sequelize, DataTypes, Model);
+
 
 // foreign key for session
 db.user.hasMany(db.session, {
