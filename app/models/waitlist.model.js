@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         notificationSent: {
             type: Sequelize.STRING(20),
-            allowNull: falsee,
+            allowNull: false,
         },
     });
     return Waitlist;
