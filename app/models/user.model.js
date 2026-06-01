@@ -22,6 +22,19 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.BLOB,
       allowNull: false,
     },
+    phoneNumber:{
+      type: Sequelize.STRING(255),
+      allowNull:true,
+    },
+    dateCreated: {
+      type: Sequelize.DATE,
+      allowNull: true,
+    },
+    userType: {
+      type: Sequelize.STRING(255),
+      allowNull: false,
+    },
+
   });
 
   return User;
