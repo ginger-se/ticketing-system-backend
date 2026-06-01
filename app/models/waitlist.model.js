@@ -2,11 +2,11 @@ module.exports = (sequelize, Sequelize) => {
     const Waitlist = sequelize.define("waitlist",{
         waitlistDate:{
             type: Sequelize.DATE,
-            allowNull: true,
+            allowNull: false,
         },
         notificationSent: {
             type: Sequelize.STRING(20),
-            allowNull: true,
+            allowNull: false,
         },
     });
     return Waitlist;

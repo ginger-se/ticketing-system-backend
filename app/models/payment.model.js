@@ -1,21 +1,16 @@
-module.exports = (sequelize, Sequelize) => {
+module.exports = (sequelize, Sequelize, DataTypes, Model) => {
   class Payment extends Model {}
 
     Payment.init(
       {
-        // Model attributes are defined here
-        paymentId: {
-          type: DataTypes.INTEGER,
-          autoIncrement: true,
-          primaryKey: true,
-        },
         amount: {
           type: DataTypes.DECIMAL(10,2),
           allowNull: false,
         },
         paymentDate:{
-          type: DataTypes.TIMESTAMP,
+          type: DataTypes.DATE,
           allowNull: false,
+          defaultValue: DataTypes.NOW
         },
         paymentMethod: {
           type: DataTypes.STRING(50),
