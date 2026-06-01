@@ -1,23 +1,24 @@
-module.exports = (sequelize, Sequelize) => {
+module.exports = (sequelize, Sequelize, DataTypes, Model) => {
   class Refund extends Model {}
 
     Refund.init(
       {
         // Model attributes are defined here
-        RefundId: {
+        refundId: {
           type: DataTypes.INTEGER,
           autoIncrement: true,
           primaryKey: true,
         },
-        RequestDate:{
-          type: DataTypes.TIMESTAMP,
+        requestDate:{
+          type: DataTypes.DATE,
           allowNull: false,
+          DefaultValue: DataTypes.NOW
         },
         processedDate:{
-          type: DataTypes.TIMESTAMP,
-          allowNull: false,
+          type: DataTypes.DATE,
+          allowNull: true,
         },
-        RefundStatus: {
+        refundStatus: {
           type: DataTypes.STRING(255),
           allowNull: false,
         },

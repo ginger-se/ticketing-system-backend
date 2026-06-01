@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize) => {
+module.exports = (sequelize, Sequelize, DataTypes, Model) => {
   class Payment extends Model {}
 
     Payment.init(
@@ -14,8 +14,9 @@ module.exports = (sequelize, Sequelize) => {
           allowNull: false,
         },
         paymentDate:{
-          type: DataTypes.TIMESTAMP,
+          type: DataTypes.DATE,
           allowNull: false,
+          defaultValue: DataTypes.NOW
         },
         paymentMethod: {
           type: DataTypes.STRING(50),
