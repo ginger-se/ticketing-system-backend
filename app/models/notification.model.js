@@ -2,11 +2,11 @@ module.exports =(sequelize, Sequelize) => {
     const Notification = sequelize.define("notification",{
           message:{
             type: Sequelize.STRING(225),
-            allowNull: true,
+            allowNull: false,
           },
         dateSent:{
             type: Sequelize.DATE,
-            allowNull:true,
+            allowNull:false,
         },
     });
      return Notification; 
