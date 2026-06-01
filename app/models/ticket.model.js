@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         ticketType: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(25),
             allowNull: false,
         },
         purchaseDate: {
@@ -13,7 +13,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         ticketStatus: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(25),
             allowNull: false,
         },
     });

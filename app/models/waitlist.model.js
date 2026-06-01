@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Waitlist = sequelize.efine("waitlist",{
+    const Waitlist = sequelize.define("waitlist",{
         waitlistDate:{
             type: Sequelize.DATE,
             allowNull: true,

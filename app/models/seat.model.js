@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         rowNumber: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(25),
             allowNull: false,
         },
         isHandicap: {

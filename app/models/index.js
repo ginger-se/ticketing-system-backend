@@ -1,4 +1,3 @@
-const { allowCustomObjectId } = require("parse");
 const dbConfig = require("../config/db.config.js");
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
@@ -28,6 +27,13 @@ db.ticket = require("./ticket.model.js")(sequelize, Sequelize);
 db.ticketSeat = require("./ticketSeat.model.js")(sequelize, Sequelize);
 db.seat = require("./seat.model.js")(sequelize, Sequelize);
 db.show = require("./show.model.js")(sequelize, Sequelize);
+db.reservation = require("./reservation.model.js")(sequelize, Sequelize);
+db.reservationSeat = require("./reservationSeat.model.js")(sequelize, Sequelize);
+db.event = require("./event.model.js")(sequelize, Sequelize);
+db.waitlist = require("./waitlist.model.js")(sequelize, Sequelize);
+db.notification = require("./notification.model.js")(sequelize, Sequelize);
+db.payment = require("./payment.model.js")(sequelize, Sequelize);
+db.refund = require("./refund.model.js")(sequelize, Sequelize);
 
 // foreign key for session
 db.user.hasMany(db.session, {
@@ -166,7 +172,7 @@ db.reservationSeat.belongsTo(db.seat, {
 // foreign keys for reservation
 db.user.hasMany(db.reservation, {
   as: "reservations",
-  foreignKey: { allowNull: false },
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.reservation.belongsTo(db.user, {
@@ -200,7 +206,7 @@ db.event.belongsTo(db.show, {
 // foreign keys for waitlist
 db.user.hasMany(db.waitlist, {
   as: "waitlists",
-  foreignKey: { allowNull: false },
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.waitlist.belongsTo(db.user, {
@@ -210,7 +216,7 @@ db.waitlist.belongsTo(db.user, {
 });
 db.event.hasMany(db.waitlist, {
   as: "waitlists",
-  foreignKey: { allowNull: false },
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.waitlist.belongsTo(db.event, {
@@ -222,7 +228,7 @@ db.waitlist.belongsTo(db.event, {
 // foreign keys for notification
 db.user.hasMany(db.notification, {
   as: "notifications",
-  foreignKey: { allowNull: false },
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.notification.belongsTo(db.user, {
@@ -246,7 +252,7 @@ db.session.belongsTo(db.user, {
 // foreign keys for payment
 db.user.hasMany(db.payment, {
   as: "payments",
-  foreignKey: { allowNull: false },
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.payment.belongsTo(db.user, {
@@ -258,7 +264,7 @@ db.payment.belongsTo(db.user, {
 // foreign keys for refund
 db.payment.hasMany(db.refund, {
   as: "refunds",
-  foreignKey: { allowNull: false },
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.refund.belongsTo(db.payment, {
