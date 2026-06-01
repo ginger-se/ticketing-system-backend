@@ -32,8 +32,6 @@ db.reservationSeat = require("./reservationSeat.model.js")(sequelize, Sequelize)
 db.event = require("./event.model.js")(sequelize, Sequelize);
 db.waitlist = require("./waitlist.model.js")(sequelize, Sequelize);
 db.notification = require("./notification.model.js")(sequelize, Sequelize);
-db.payment = require("./payment.model.js")(sequelize, Sequelize);
-db.refund = require("./refund.model.js")(sequelize, Sequelize);
 
 // foreign key for session
 db.user.hasMany(db.session, {
