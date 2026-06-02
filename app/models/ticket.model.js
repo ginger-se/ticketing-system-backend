@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Ticket = sequelize.define("Ticket", {
+    const Ticket = sequelize.define("ticket", {
         QRCode: {
             type: Sequelize.STRING,
             allowNull: false,

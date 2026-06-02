@@ -23,46 +23,11 @@ db.ticket = require("./ticket.model.js")(sequelize, Sequelize);
 db.ticketSeat = require("./ticketSeat.model.js")(sequelize, Sequelize);
 db.seat = require("./seat.model.js")(sequelize, Sequelize);
 db.show = require("./show.model.js")(sequelize, Sequelize);
-db.reservation = require("./reservation.model.js")(sequelize, Sequelize);
-db.reservationSeat = require("./reservationSeat.model.js")(sequelize, Sequelize);
-db.event = require("./event.model.js")(sequelize, Sequelize);
 db.waitlist = require("./waitlist.model.js")(sequelize, Sequelize);
 db.notification = require("./notification.model.js")(sequelize, Sequelize);
 db.payment = require("./payment.model.js")(sequelize, Sequelize, DataTypes, Model);
 db.refund = require("./refund.model.js")(sequelize, Sequelize, DataTypes, Model);
 
-
-// foreign key for session
-db.user.hasMany(db.session, {
-  as: "session",
-  foreignKey: { allowNull: false },
-  onDelete: "CASCADE",
-});
-db.session.belongsTo(db.user, {
-  as: "user",
-  foreignKey: { allowNull: false },
-  onDelete: "CASCADE",
-});
-db.reservation.hasMany(db.reservationSeat, {
-  as: "reservationSeat",
-  foreignKey: { allowNull: false },
-  onDelete: "CASCADE",
-});
-db.reservationSeat.belongsTo(db.reservation, {
-  as: "reservation",
-  foreignKey: { allowNull: false },
-  onDelete: "CASCADE",
-});
-db.event.hasMany(db.reservation, {
-  as: "reservation",
-  foreignKey: { allowNull: false },
-  onDelete: "CASCADE",
-});
-db.reservation.belongsTo(db.event, {
-  as: "event",
-  foreignKey: { allowNull: false },
-  onDelete: "CASCADE",
-});
 
 // foreign keys for ticket
 db.payment.hasMany(db.ticket, {

@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Seat = sequelize.define("Seat", {
+    const Seat = sequelize.define("seat", {
         seatNumber: {
             type: Sequelize.INTEGER,
             allowNull: false,
