@@ -29,28 +29,14 @@ db.payment = require("./payment.model.js")(sequelize, Sequelize, DataTypes, Mode
 db.refund = require("./refund.model.js")(sequelize, Sequelize, DataTypes, Model);
 
 
-<<<<<<< HEAD
-// foreign keys for ticket
-db.payment.hasMany(db.ticket, {
-  as: "tickets",
-  foreignKey: { allowNull: false },
-=======
+
 // foreign keys for session
 db.user.hasMany(db.session, {
   as: "sessions",
   foreignKey: { name: "userId", allowNull: false },
   onDelete: "CASCADE",
 });
-<<<<<<< HEAD
-db.ticket.belongsTo(db.payment, {
-  as: "payment",
-  foreignKey: { allowNull: false },
-  onDelete: "CASCADE",
-});
-db.event.hasMany(db.ticket, {
-  as: "tickets",
-  foreignKey: { allowNull: false },
-=======
+
 db.session.belongsTo(db.user, {
   as: "user",
   foreignKey: { name: "userId", allowNull: false },
@@ -61,8 +47,6 @@ db.session.belongsTo(db.user, {
 db.show.hasMany(db.event, {
   as: "events",
   foreignKey: { name: "showId", allowNull: false },
->>>>>>> 16f082c (added show routes and updated index)
->>>>>>> 4af2d89 (added show routes and updated index)
   onDelete: "CASCADE",
 });
 db.event.belongsTo(db.show, {
