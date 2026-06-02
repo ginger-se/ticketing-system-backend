@@ -25,7 +25,7 @@ module.exports = (sequelize, Sequelize, DataTypes, Model) => {
       {
         // Other model options go here
         sequelize, // We need to pass the connection instance
-        modelName: 'Payment', // We need to choose the model name
+        modelName: 'payment', // We need to choose the model name
       },
     );
   return Payment;
