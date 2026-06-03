@@ -29,175 +29,173 @@ db.payment = require("./payment.model.js")(sequelize, Sequelize, DataTypes, Mode
 db.refund = require("./refund.model.js")(sequelize, Sequelize, DataTypes, Model);
 
 
-
-// foreign keys for session
-db.user.hasMany(db.session, {
-  as: "sessions",
-  foreignKey: { name: "userId", allowNull: false },
+// foreign keys for ticket
+db.payment.hasMany(db.ticket, {
+  as: "paymentTickets",
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
-
-db.session.belongsTo(db.user, {
-  as: "user",
-  foreignKey: { name: "userId", allowNull: false },
+db.ticket.belongsTo(db.payment, {
+  as: "payment",
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
-
-// foreign keys for show -> event
-db.show.hasMany(db.event, {
-  as: "events",
-  foreignKey: { name: "showId", allowNull: false },
+db.event.hasMany(db.ticket, {
+  as: "eventTickets",
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
-db.event.belongsTo(db.show, {
-  as: "show",
-  foreignKey: { name: "showId", allowNull: false },
-  onDelete: "CASCADE",
-});
-
-// foreign keys for reservation
-db.user.hasMany(db.reservation, {
-  as: "reservations",
-  foreignKey: { name: "userId", allowNull: true },
-  onDelete: "CASCADE",
-});
-db.reservation.belongsTo(db.user, {
-  as: "user",
-  foreignKey: { name: "userId", allowNull: false },
-  onDelete: "CASCADE",
-});
-db.event.hasMany(db.reservation, {
-  as: "reservations",
-  foreignKey: { name: "eventId", allowNull: false },
-  onDelete: "CASCADE",
-});
-db.reservation.belongsTo(db.event, {
+db.ticket.belongsTo(db.event, {
   as: "event",
-  foreignKey: { name: "eventId", allowNull: false },
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+
+// foreign keys for ticketSeat
+db.seat.hasMany(db.ticketSeat, {
+  as: "seatTickets",
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+db.ticketSeat.belongsTo(db.seat, {
+  as: "seat",
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+db.ticket.hasMany(db.ticketSeat, {
+  as: "ticketSeats",
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+db.ticketSeat.belongsTo(db.ticket, {
+  as: "ticket",
+  foreignKey: { allowNull: false},
   onDelete: "CASCADE",
 });
 
 // foreign keys for reservationSeat
 db.reservation.hasMany(db.reservationSeat, {
   as: "reservationSeats",
-  foreignKey: { name: "reservationId", allowNull: false },
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
 db.reservationSeat.belongsTo(db.reservation, {
   as: "reservation",
-  foreignKey: { name: "reservationId", allowNull: false },
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
 db.seat.hasMany(db.reservationSeat, {
-  as: "reservationSeats",
-  foreignKey: { name: "seatId", allowNull: false },
+  as: "seatReservations",
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
 db.reservationSeat.belongsTo(db.seat, {
   as: "seat",
-  foreignKey: { name: "seatId", allowNull: false },
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
 
-// foreign keys for ticket
-db.payment.hasMany(db.ticket, {
-  as: "tickets",
-  foreignKey: { name: "paymentId", allowNull: false },
+// foreign keys for reservation
+db.user.hasMany(db.reservation, {
+  as: "userReservations",
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
-db.ticket.belongsTo(db.payment, {
-  as: "payment",
-  foreignKey: { name: "paymentId", allowNull: false },
+db.reservation.belongsTo(db.user, {
+  as: "user",
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
-db.event.hasMany(db.ticket, {
-  as: "tickets",
-  foreignKey: { name: "eventId", allowNull: false },
+db.event.hasMany(db.reservation, {
+  as: "eventReservations",
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
-db.ticket.belongsTo(db.event, {
+db.reservation.belongsTo(db.event, {
   as: "event",
-  foreignKey: { name: "eventId", allowNull: false },
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
 
-// foreign keys for ticketSeat
-db.ticket.hasMany(db.ticketSeat, {
-  as: "ticketSeats",
-  foreignKey: { name: "ticketId", allowNull: false },
+// foreign keys for event
+db.show.hasMany(db.event, {
+  as: "showEvents",
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
-});
-db.ticketSeat.belongsTo(db.ticket, {
-  as: "ticket",
-  foreignKey: { name: "ticketId", allowNull: false },
+})
+db.event.belongsTo(db.show, {
+  as: "show",
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
-});
-db.seat.hasMany(db.ticketSeat, {
-  as: "ticketSeats",
-  foreignKey: { name: "seatId", allowNull: false },
-  onDelete: "CASCADE",
-});
-db.ticketSeat.belongsTo(db.seat, {
-  as: "seat",
-  foreignKey: { name: "seatId", allowNull: false },
-  onDelete: "CASCADE",
-});
+})
 
 // foreign keys for waitlist
 db.user.hasMany(db.waitlist, {
-  as: "waitlists",
-  foreignKey: { name: "userId", allowNull: true },
+  as: "userWaitlists",
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.waitlist.belongsTo(db.user, {
   as: "user",
-  foreignKey: { name: "userId", allowNull: false },
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
 db.event.hasMany(db.waitlist, {
-  as: "waitlists",
-  foreignKey: { name: "eventId", allowNull: true },
+  as: "eventWaitlists",
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.waitlist.belongsTo(db.event, {
   as: "event",
-  foreignKey: { name: "eventId", allowNull: false },
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
 
 // foreign keys for notification
 db.user.hasMany(db.notification, {
   as: "notifications",
-  foreignKey: { name: "userId", allowNull: true },
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.notification.belongsTo(db.user, {
   as: "user",
-  foreignKey: { name: "userId", allowNull: false },
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+
+// foreign keys for sessions
+db.user.hasMany(db.session, {
+  as: "sessions",
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+db.session.belongsTo(db.user, {
+  as: "user",
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
 
 // foreign keys for payment
 db.user.hasMany(db.payment, {
   as: "payments",
-  foreignKey: { name: "userId", allowNull: true },
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.payment.belongsTo(db.user, {
   as: "user",
-  foreignKey: { name: "userId", allowNull: false },
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
 
 // foreign keys for refund
 db.payment.hasMany(db.refund, {
   as: "refunds",
-  foreignKey: { name: "paymentId", allowNull: true },
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
-db.refund.belongsTo(db.payment,  {
+db.refund.belongsTo(db.payment, {
   as: "payment",
-  foreignKey: { name: "paymentId", allowNull: false },
+  foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
 

@@ -9,7 +9,7 @@ const db = require("./app/models");
 
 const startServer = async () => {
   try {
-    await db.sequelize.sync({ alert : true }); // to update existing models
+    await db.sequelize.sync({ alter: false});
     console.log("Database synced.");
 
     if (process.env.NODE_ENV !== "test") {
