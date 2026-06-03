@@ -9,7 +9,7 @@ const db = require("./app/models");
 
 const startServer = async () => {
   try {
-    await db.sequelize.sync();
+    await db.sequelize.sync({ alter: false});
     console.log("Database synced.");
 
     if (process.env.NODE_ENV !== "test") {
@@ -42,10 +42,6 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/auth.routes.js")(app);
-require("./app/routes/ingredient.routes")(app);
-require("./app/routes/recipe.routes")(app);
-require("./app/routes/recipeStep.routes")(app);
-require("./app/routes/recipeIngredient.routes")(app);
 require("./app/routes/user.routes")(app);
 
 // set port, listen for requests
