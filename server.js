@@ -9,7 +9,7 @@ const db = require("./app/models");
 
 const startServer = async () => {
   try {
-    await db.sequelize.sync();
+    await db.sequelize.sync({ alert : true }); // to update existing models
     console.log("Database synced.");
 
     if (process.env.NODE_ENV !== "test") {
@@ -38,7 +38,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to the recipe backend." });
+  res.json({ message: "Welcome to the ticketing backend." });
 });
 
 require("./app/routes/auth.routes.js")(app);
