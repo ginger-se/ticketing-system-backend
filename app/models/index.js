@@ -31,7 +31,7 @@ db.refund = require("./refund.model.js")(sequelize, Sequelize, DataTypes, Model)
 
 // foreign keys for ticket
 db.payment.hasMany(db.ticket, {
-  as: "tickets",
+  as: "paymentTickets",
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
@@ -41,7 +41,7 @@ db.ticket.belongsTo(db.payment, {
   onDelete: "CASCADE",
 });
 db.event.hasMany(db.ticket, {
-  as: "tickets",
+  as: "eventTickets",
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
@@ -53,7 +53,7 @@ db.ticket.belongsTo(db.event, {
 
 // foreign keys for ticketSeat
 db.seat.hasMany(db.ticketSeat, {
-  as: "ticketSeats",
+  as: "seatTickets",
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
@@ -85,7 +85,7 @@ db.reservationSeat.belongsTo(db.reservation, {
   onDelete: "CASCADE",
 });
 db.seat.hasMany(db.reservationSeat, {
-  as: "reservationSeats",
+  as: "seatReservations",
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
@@ -97,7 +97,7 @@ db.reservationSeat.belongsTo(db.seat, {
 
 // foreign keys for reservation
 db.user.hasMany(db.reservation, {
-  as: "reservations",
+  as: "userReservations",
   foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
@@ -107,7 +107,7 @@ db.reservation.belongsTo(db.user, {
   onDelete: "CASCADE",
 });
 db.event.hasMany(db.reservation, {
-  as: "reservations",
+  as: "eventReservations",
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
@@ -119,7 +119,7 @@ db.reservation.belongsTo(db.event, {
 
 // foreign keys for event
 db.show.hasMany(db.event, {
-  as: "events",
+  as: "showEvents",
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 })
@@ -131,7 +131,7 @@ db.event.belongsTo(db.show, {
 
 // foreign keys for waitlist
 db.user.hasMany(db.waitlist, {
-  as: "waitlists",
+  as: "userWaitlists",
   foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
@@ -141,7 +141,7 @@ db.waitlist.belongsTo(db.user, {
   onDelete: "CASCADE",
 });
 db.event.hasMany(db.waitlist, {
-  as: "waitlists",
+  as: "eventWaitlists",
   foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
