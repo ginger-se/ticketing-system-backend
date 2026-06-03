@@ -32,7 +32,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     userType: {
       type: Sequelize.STRING(255),
-      allowNull: false,
+      allowNull: true,
     },
 
   });

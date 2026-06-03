@@ -42,7 +42,7 @@ exports.findAll = async (req, res) => {
     : null;
 
   try {
-    const data = await title.findAll({ where: condition, order: [["title", "ASC"]] });
+    const data = await Show.findAll({ where: condition, order: [["title", "ASC"]] });
     res.send(data);
   } catch (err) {
     res.status(500).send({
