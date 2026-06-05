@@ -72,6 +72,7 @@ exports.create = async (req, res) => {
         lastName: user.lastName,
         id: user.id,
         token: token,
+        userType: user.userType,
       };
       res.send(userInfo);
     } catch (err) {

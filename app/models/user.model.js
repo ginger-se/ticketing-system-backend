@@ -31,7 +31,7 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: true,
     },
     userType: {
-      type: Sequelize.STRING(255),
+      type: Sequelize.ENUM('admin', 'customer'),
       allowNull: true,
     },
 
