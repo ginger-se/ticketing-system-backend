@@ -146,3 +146,27 @@ exports.deleteAll = async (req, res) => {
     });
   }
 };
+
+//retrieve events for today
+exports.findToday = async (req, res) => {
+  const today = new Date();
+  const startOfDay= new Date(today.getFullYear(),today.getMonth(),today.getDate(),0,0,0);
+  const endOfDay= new Date(today.getFullYear(),today.getMonth(),today.getDate(),23,59,59);
+
+  try {
+    const data = await Event.findAll({
+      where: {
+        startTime: {
+          [Op.between]: [startOfDay, endOfDay]
+        },
+      },
+      order: [["startTime", "ASC"]],
+    });
+    res.send(data);
+  } catch (err) {
+    res.status(500).send({
+      message:
+        err.message || "Some error occurred while retrieving events for today.",
+    });
+  }
+};
