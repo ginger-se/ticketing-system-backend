@@ -25,5 +25,5 @@ module.exports = (app) => {
   // Delete all shows
   router.delete("/events/", [authenticateRoute, isAdmin], Event.deleteAll);
 
-  app.use("/recipeapi", router);
+  app.use("/museumapi", router);
 };

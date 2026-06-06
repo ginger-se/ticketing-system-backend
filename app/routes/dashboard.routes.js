@@ -5,5 +5,5 @@ module.exports = (app) => {
     var router = require("express").Router();
     
     router.get("/dashboard/stats", [authenticateRoute, isAdmin], dashboard.getStats);
-    app.use("/recipeapi", router);
+    app.use("/museumapi", router);
 };
