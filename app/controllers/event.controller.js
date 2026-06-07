@@ -1,6 +1,5 @@
 const db = require("../models");
 const Event = db.event;
-const Show = db.show;
 const Op = db.Sequelize.Op;
 
 // Create and Save an event
