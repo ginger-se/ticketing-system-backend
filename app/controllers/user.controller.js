@@ -47,6 +47,7 @@ exports.create = async (req, res) => {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
+      phoneNumber: req.body.phoneNumber ? req.body.phoneNumber.replace(/\D/g, '') : null,
       password: hash,
       salt: salt,
     };
