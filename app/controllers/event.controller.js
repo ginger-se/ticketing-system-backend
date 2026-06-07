@@ -155,6 +155,7 @@ exports.findToday = async (req, res) => {
 
   try {
     const data = await Event.findAll({
+      include: ['show', 'eventTickets'],
       where: {
         startTime: {
           [Op.between]: [startOfDay, endOfDay]
