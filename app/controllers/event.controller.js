@@ -1,5 +1,6 @@
 const db = require("../models");
 const Event = db.event;
+const Show = db.show;
 const Op = db.Sequelize.Op;
 
 // Create and Save an event
@@ -155,6 +156,7 @@ exports.findToday = async (req, res) => {
 
   try {
     const data = await Event.findAll({
+      include: ['show', 'eventTickets'],
       where: {
         startTime: {
           [Op.between]: [startOfDay, endOfDay]
