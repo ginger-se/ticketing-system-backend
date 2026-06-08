@@ -4,77 +4,69 @@ const Op = db.Sequelize.Op;
 
 // Create and Save an event
 exports.create = async (req, res) => {
-  // Validate request
   if (req.body.startTime === undefined) {
     const error = new Error("Start Time cannot be empty for event!");
     error.statusCode = 400;
     throw error;
-  } else if( req.body.endTime == undefined){
+  } else if (req.body.endTime == undefined) {
     const error = new Error("End time cannot be empty for event");
     error.statusCode = 400;
     throw error;
-  }
-  else if( req.body.capacity == undefined){
+  } else if (req.body.capacity == undefined) {
     const error = new Error("Capacity cannot be empty for event!");
     error.statusCode = 400;
     throw error;
-  }
- else if( req.body.showId == undefined){
+  } else if (req.body.showId == undefined) {
     const error = new Error("Show ID cannot be empty for event!");
     error.statusCode = 400;
     throw error;
   }
 
-  // Create an event
   const event = {
     startTime: req.body.startTime,
     endTime: req.body.endTime,
-    status: req.body.status,
+    status: req.body.status || "Scheduled",
     capacity: req.body.capacity,
     showId: req.body.showId,
-
-    
   };
-  // Save event in the database
+
   try {
     const data = await Event.create(event);
     res.send(data);
   } catch (err) {
     res.status(500).send({
-      message:
-        err.message || "Some error occurred while creating the Event.",
+      message: err.message || "Some error occurred while creating the Event.",
     });
   }
 };
 
-// Retrieve all Event from the database.
+// Retrieve all Events from the database
 exports.findAll = async (req, res) => {
   const showId = req.query.showId;
-  var condition = showId
-    ? {
-        showId: {
-          [Op.like]: `%${showId}%`,
-        },
-      }
-    : null;
+  var condition = showId ? { showId: showId } : null;
 
   try {
-    const data = await Event.findAll({ where: condition, order: [["startTime", "ASC"]] });
+    const data = await Event.findAll({
+      where: condition,
+      order: [["startTime", "ASC"]],
+      include: [{ model: db.show, as: "show" }],
+    });
     res.send(data);
   } catch (err) {
     res.status(500).send({
-      message:
-        err.message || "Some error occurred while retrieving events.",
+      message: err.message || "Some error occurred while retrieving events.",
     });
   }
 };
 
-// Find a single Show with an id
+// Find a single Event with an id
 exports.findOne = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const data = await Event.findByPk(id);
+    const data = await Event.findByPk(id, {
+      include: [{ model: db.show, as: "show" }],
+    });
     res.send(data);
   } catch (err) {
     res.status(500).send({
@@ -83,7 +75,7 @@ exports.findOne = async (req, res) => {
   }
 };
 
-// Update a Show by the id in the request
+// Update an Event by the id in the request
 exports.update = async (req, res) => {
   const id = req.params.id;
 
@@ -92,9 +84,7 @@ exports.update = async (req, res) => {
       where: { id: id },
     });
     if (num == 1) {
-      res.send({
-        message: "Event was updated successfully.",
-      });
+      res.send({ message: "Event was updated successfully." });
     } else {
       res.send({
         message: `Cannot update Event with id=${id}. Maybe Event was not found or req.body is empty!`,
@@ -107,7 +97,30 @@ exports.update = async (req, res) => {
   }
 };
 
-// Delete a Show with the specified id in the request
+// Cancel an Event
+exports.cancel = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const num = await Event.update(
+      { status: "Cancelled" },
+      { where: { id: id } }
+    );
+    if (num == 1) {
+      res.send({ message: "Event was cancelled successfully." });
+    } else {
+      res.send({
+        message: `Cannot cancel Event with id=${id}. Maybe Event was not found!`,
+      });
+    }
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Error cancelling Event with id=" + id,
+    });
+  }
+};
+
+// Delete an Event with the specified id
 exports.delete = async (req, res) => {
   const id = req.params.id;
 
@@ -116,9 +129,7 @@ exports.delete = async (req, res) => {
       where: { id: id },
     });
     if (number == 1) {
-      res.send({
-        message: "Event was deleted successfully!",
-      });
+      res.send({ message: "Event was deleted successfully!" });
     } else {
       res.send({
         message: `Cannot delete Event with id=${id}. Maybe Event was not found!`,
@@ -131,7 +142,7 @@ exports.delete = async (req, res) => {
   }
 };
 
-// Delete all Shows from the database.
+// Delete all Events from the database
 exports.deleteAll = async (req, res) => {
   try {
     const number = await Event.destroy({
@@ -141,33 +152,31 @@ exports.deleteAll = async (req, res) => {
     res.send({ message: `${number} Events were deleted successfully!` });
   } catch (err) {
     res.status(500).send({
-      message:
-        err.message || "Some error occurred while removing all events.",
+      message: err.message || "Some error occurred while removing all events.",
     });
   }
 };
 
-//retrieve events for today
+// Retrieve events for today
 exports.findToday = async (req, res) => {
   const today = new Date();
-  const startOfDay= new Date(today.getFullYear(),today.getMonth(),today.getDate(),0,0,0);
-  const endOfDay= new Date(today.getFullYear(),today.getMonth(),today.getDate(),23,59,59);
+  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+  const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
 
   try {
     const data = await Event.findAll({
-      include: ['show', 'eventTickets'],
       where: {
         startTime: {
-          [Op.between]: [startOfDay, endOfDay]
+          [Op.between]: [startOfDay, endOfDay],
         },
       },
       order: [["startTime", "ASC"]],
+      include: [{ model: db.show, as: "show" }],
     });
     res.send(data);
   } catch (err) {
     res.status(500).send({
-      message:
-        err.message || "Some error occurred while retrieving events for today.",
+      message: err.message || "Some error occurred while retrieving events for today.",
     });
   }
 };
