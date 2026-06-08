@@ -4,25 +4,28 @@ module.exports = (app) => {
   const isAdmin = require("../middleware/isAdmin");
   var router = require("express").Router();
 
-  // Create a new show
+  // Create a new event
   router.post("/events/", [authenticateRoute, isAdmin], Event.create);
 
-  // Retrieve all shows
+  // Retrieve all events
   router.get("/events/", Event.findAll);
 
-  // Retrieve a single show with id
+  // Retrieve events for today 
+  router.get("/events/today", Event.findToday);
+
+  // Retrieve a single event with id 
   router.get("/events/:id", Event.findOne);
 
-  // Retrieve events for today
-  router.get("/eventsToday", Event.findToday);
-
-  // Update a show with id
+  // Update an event with id
   router.put("/events/:id", [authenticateRoute, isAdmin], Event.update);
 
-  // Delete a show with id
+  // Cancel an event
+  router.put("/events/:id/cancel", [authenticateRoute, isAdmin], Event.cancel);
+
+  // Delete an event with id
   router.delete("/events/:id", [authenticateRoute, isAdmin], Event.delete);
 
-  // Delete all shows
+  // Delete all events
   router.delete("/events/", [authenticateRoute, isAdmin], Event.deleteAll);
 
   app.use("/museumapi", router);
