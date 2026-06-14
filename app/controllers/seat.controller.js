@@ -46,9 +46,12 @@ exports.create = async (req, res) => {
 
 // Retrieve all Seats from the database
 exports.findAll = async (req, res) => {
-
   try {
     const data = await Seat.findAll({
+      order: [
+        ["rowNumber", "ASC"],
+        ["seatNumber", "ASC"]
+      ],
     });
     res.send(data);
   } catch (err) {
