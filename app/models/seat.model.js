@@ -16,6 +16,16 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
-    });
+    },
+        {
+            indexes: [
+                {
+                    unique: true,
+                    fields: ['seatNumber', 'rowNumber']
+                }
+        ]
+
+    },
+);
     return Seat;
 };
