@@ -33,6 +33,7 @@ module.exports = (sequelize, Sequelize) => {
     userType: {
       type: Sequelize.ENUM('admin', 'customer'),
       allowNull: true,
+      defaultValue: 'customer',
     },
 
   });
