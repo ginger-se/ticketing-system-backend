@@ -43,6 +43,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
           REMOTE_USER: ubuntu
           TARGET: "nodeapps/ticketing-system-backend"
+          SCRIPT_BEFORE: "mkdir -p /home/ubuntu/nodeapps/ticketing-system-backend"
       - name: Execute SSH commmands on remote server
         uses: JimCronqvist/action-ssh@master
         env:
