@@ -20,7 +20,6 @@ db.reservation= require("./reservation.model.js")(sequelize, Sequelize);
 db.session = require("./session.model.js")(sequelize, Sequelize);
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.ticket = require("./ticket.model.js")(sequelize, Sequelize);
-db.ticketSeat = require("./ticketSeat.model.js")(sequelize, Sequelize);
 db.seat = require("./seat.model.js")(sequelize, Sequelize);
 db.show = require("./show.model.js")(sequelize, Sequelize);
 db.waitlist = require("./waitlist.model.js")(sequelize, Sequelize);
@@ -52,24 +51,14 @@ db.ticket.belongsTo(db.event, {
 });
 
 // foreign keys for ticketSeat
-db.seat.hasMany(db.ticketSeat, {
-  as: "seatTickets",
+db.seat.hasMany(db.ticket, {
+  as: "tickets",
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
-db.ticketSeat.belongsTo(db.seat, {
+db.ticket.belongsTo(db.seat, {
   as: "seat",
   foreignKey: { allowNull: false },
-  onDelete: "CASCADE",
-});
-db.ticket.hasMany(db.ticketSeat, {
-  as: "ticketSeats",
-  foreignKey: { allowNull: false },
-  onDelete: "CASCADE",
-});
-db.ticketSeat.belongsTo(db.ticket, {
-  as: "ticket",
-  foreignKey: { allowNull: false},
   onDelete: "CASCADE",
 });
 

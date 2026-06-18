@@ -27,14 +27,17 @@ exports.create = async (req, res) => {
     ticketStatus: req.body.ticketStatus,
     eventId: req.body.eventId ,
     paymentId: req.body.paymentId,
+    seatId: req.body.seatId,
 
   };
 
-  ticket.QRCode = "http://localhost:3200/museumapi/tickets/checkin/" + Math.random();
+  ticket.QRCode = "http://localhost:3200/museumapi/tickets/checkin/";
   ticket.purchaseDate = Date.now();
 
   try {
     const data = await Ticket.create(ticket);
+    data.QRCode += data.id;
+    await data.save();
     res.send(data);
   } catch (err) {
     res.status(500).send({
@@ -155,6 +158,32 @@ exports.update = async (req, res) => {
   }
 };
 
+// Check in users
+exports.checkIn = async (req, res) => {
+  const id = req.params.id;
+  try {
+    let ticket = await Ticket.findOne({
+      where: {id: id},
+      include:[
+        {
+          model: db.seat, as: "seat", required: true
+        }
+    ]
+    });
+    if(ticket.ticketStatus == "CheckedIn"){
+      res.send({message: "Error: Ticket has already checked in."})
+    }else {
+
+      ticket.ticketStatus = "CheckedIn";
+      await ticket.save();
+      res.send({message: "Checked in sucessfully! " + "Row Number: " + ticket.seat.rowNumber + " Seat number: " + ticket.seat.seatNumber });
+    }
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "Cannot check in ticket with id=${id}. Maybe ticket was not found or already used.",
+    });
+  }
+};
 
 // Delete an Ticket with the specified id
 exports.delete = async (req, res) => {

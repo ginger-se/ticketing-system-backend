@@ -20,7 +20,7 @@ module.exports = (app) => {
   router.put("/tickets/:id", [authenticateRoute, isAdmin], ticket.update);
 
    // Update an ticket with id
-  router.put("/tickets/:id", [authenticateRoute, isAdmin], ticket.update);
+  router.get("/tickets/checkin/:id", ticket.checkIn);
 
   // Delete an ticket with id
   router.delete("/tickets/:id", [authenticateRoute, isAdmin], ticket.delete);
