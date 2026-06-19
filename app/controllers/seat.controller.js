@@ -8,6 +8,11 @@ exports.create = async (req, res) => {
     const error = new Error("seatNumber cannot be empty for seat!");
     error.statusCode = 400;
     throw error;
+  } else if (req.body.seatNumber < 1 || req.body.seatNumber > 10) {
+    const error = new Error("seatNumber must be between 1 and 10!");
+    return res.status(400).send({
+      message: error.message,
+    });
   } else if (req.body.rowNumber == undefined) {
     const error = new Error("rowNumber cannot be empty for seat");
     error.statusCode = 400;
@@ -41,9 +46,12 @@ exports.create = async (req, res) => {
 
 // Retrieve all Seats from the database
 exports.findAll = async (req, res) => {
-
   try {
     const data = await Seat.findAll({
+      order: [
+        ["rowNumber", "ASC"],
+        ["seatNumber", "ASC"]
+      ],
     });
     res.send(data);
   } catch (err) {
@@ -71,6 +79,13 @@ exports.findOne = async (req, res) => {
 // Update an Seat by the id in the request
 exports.update = async (req, res) => {
   const id = req.params.id;
+
+  if (req.body.seatNumber !== undefined && ((req.body.seatNumber < 1 || req.body.seatNumber > 10))) {
+    const error = new Error("seatNumber must be between 1 and 10!");
+    return res.status(400).send({
+      message: error.message || "Error updating Seat with id=" + id,
+    });
+  }
 
   try {
     const num = await Seat.update(req.body, {

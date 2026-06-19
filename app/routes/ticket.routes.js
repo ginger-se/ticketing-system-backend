@@ -16,11 +16,14 @@ module.exports = (app) => {
   // Retrieve all tickets for a user
   router.get("/tickets/user/:userId", ticket.findForUser);
 
-  // Update an ticket with id
+  // Update a ticket with id
   router.put("/tickets/:id", [authenticateRoute, isAdmin], ticket.update);
 
    // Update an ticket with id
   router.get("/tickets/checkin/:id", ticket.checkIn);
+  
+  // Admin manually refunds a ticket (deletes reservation)
+  router.delete("/tickets/:id/refund", [authenticateRoute, isAdmin], ticket.adminRefundTicket);
 
   // Delete an ticket with id
   router.delete("/tickets/:id", [authenticateRoute, isAdmin], ticket.delete);

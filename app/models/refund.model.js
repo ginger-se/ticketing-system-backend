@@ -16,11 +16,18 @@ module.exports = (sequelize, Sequelize, DataTypes, Model) => {
           type: DataTypes.STRING(255),
           allowNull: false,
         },
+        reason: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+        },
+        details: {
+          type: DataTypes.STRING(500),
+          allowNull: true,
+        },
       },
       {
-        // Other model options go here
         sequelize, // We need to pass the connection instance
-        modelName: 'refund', // We need to choose the model name
+        modelName: 'refund', 
       },
     );
   return Refund;

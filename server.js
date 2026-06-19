@@ -9,7 +9,7 @@ const db = require("./app/models");
 
 const startServer = async () => {
   try {
-    await db.sequelize.sync({ alter: false});
+    await db.sequelize.sync({ alter: false});// update this to false or true when you update anything in models
     console.log("Database synced.");
 
     if (process.env.NODE_ENV !== "test") {
@@ -48,6 +48,7 @@ require("./app/routes/event.routes.js")(app);
 require("./app/routes/dashboard.routes.js")(app);
 require("./app/routes/seat.routes.js")(app);
 require("./app/routes/ticket.routes.js")(app);
+require("./app/routes/refund.routes.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3200;

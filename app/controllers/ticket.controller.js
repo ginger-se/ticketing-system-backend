@@ -207,4 +207,37 @@ exports.delete = async (req, res) => {
   }
 };
 
+exports.adminRefundTicket = async (req, res) => {
+  const id = req.params.id;
+  const refundAmount = req.body.refundAmount;
 
+  if (refundAmount === undefined) {
+    return res.status(400).send({ message: "refundAmount is required in the request body." });
+  }
+
+  const t = await db.sequelize.transaction();
+  try {
+    const ticket = await Ticket.findByPk(id, { transaction: t });
+    if (!ticket) {
+      await t.rollback();
+      return res.status(404).send({ message: `Ticket with id=${id} not found.` });
+    }
+
+    const payment = await db.payment.findByPk(ticket.paymentId, { transaction: t });
+    if (!payment) {
+      await t.rollback();
+      return res.status(404).send({ message: `Payment for ticket id=${id} not found.` });
+    }
+
+    const newAmount = parseFloat(payment.amount) - parseFloat(refundAmount);
+
+    await ticket.destroy({ transaction: t });
+    await payment.update({ amount: newAmount }, { transaction: t });
+
+    await t.commit();
+    res.send({ message: "Ticket reservation deleted and payment updated successfully.", newPaymentAmount: newAmount });
+  } catch (err) {
+    await t.rollback();
+    res.status(500).send({ message: err.message || "Could not process refund for ticket id=" + id });
+  }
+};
