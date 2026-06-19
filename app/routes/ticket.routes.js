@@ -19,6 +19,9 @@ module.exports = (app) => {
   // Update a ticket with id
   router.put("/tickets/:id", [authenticateRoute, isAdmin], ticket.update);
 
+   // Update an ticket with id
+  router.get("/tickets/checkin/:id", ticket.checkIn);
+  
   // Admin manually refunds a ticket (deletes reservation)
   router.delete("/tickets/:id/refund", [authenticateRoute, isAdmin], ticket.adminRefundTicket);
 
