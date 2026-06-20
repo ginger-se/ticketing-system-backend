@@ -4,6 +4,11 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
       type: DataTypes.DECIMAL(10,2),
       allowNull: false,
     },
+    orderDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
     orderStatus: {
       type: Sequelize.STRING,
       allowNull: false,

@@ -26,8 +26,7 @@ db.waitlist = require("./waitlist.model.js")(sequelize, Sequelize);
 db.notification = require("./notification.model.js")(sequelize, Sequelize);
 db.payment = require("./payment.model.js")(sequelize, Sequelize, DataTypes, Model);
 db.refund = require("./refund.model.js")(sequelize, Sequelize, DataTypes, Model);
-db.order = require("./order.model.js")(sequelize, Sequelize);
-
+db.order = require("./order.model.js")(sequelize, Sequelize, DataTypes);
 
 // foreign keys for ticket
 db.payment.hasMany(db.ticket, {
