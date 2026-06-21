@@ -26,7 +26,7 @@ db.waitlist = require("./waitlist.model.js")(sequelize, Sequelize);
 db.notification = require("./notification.model.js")(sequelize, Sequelize);
 db.payment = require("./payment.model.js")(sequelize, Sequelize, DataTypes, Model);
 db.refund = require("./refund.model.js")(sequelize, Sequelize, DataTypes, Model);
-
+db.order = require("./order.model.js")(sequelize, Sequelize, DataTypes);
 
 // foreign keys for ticket
 db.payment.hasMany(db.ticket, {
@@ -49,10 +49,20 @@ db.ticket.belongsTo(db.event, {
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
+db.order.hasMany(db.ticket, {
+  as: "orderTickets",
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+db.ticket.belongsTo(db.order, {
+  as: "order",
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
 
-// foreign keys for ticketSeat
+// foreign keys for ticket
 db.seat.hasMany(db.ticket, {
-  as: "tickets",
+  as: "seatTickets",
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
@@ -142,7 +152,7 @@ db.waitlist.belongsTo(db.event, {
 
 // foreign keys for notification
 db.user.hasMany(db.notification, {
-  as: "notifications",
+  as: "userNotifications",
   foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
@@ -154,7 +164,7 @@ db.notification.belongsTo(db.user, {
 
 // foreign keys for sessions
 db.user.hasMany(db.session, {
-  as: "sessions",
+  as: "userSessions",
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
@@ -166,12 +176,22 @@ db.session.belongsTo(db.user, {
 
 // foreign keys for payment
 db.user.hasMany(db.payment, {
-  as: "payments",
+  as: "userPayments",
   foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.payment.belongsTo(db.user, {
   as: "user",
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+db.order.hasMany(db.payment, {
+  as: "orderPayments",
+  foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+db.payment.belongsTo(db.order, {
+  as: "order",
   foreignKey: { allowNull: false },
   onDelete: "CASCADE",
 });
@@ -185,6 +205,18 @@ db.payment.hasMany(db.refund, {
 db.refund.belongsTo(db.payment, {
   as: "payment",
   foreignKey: { allowNull: false },
+  onDelete: "CASCADE",
+});
+
+// foreign keys for order
+db.user.hasMany(db.order, {
+  as: "orders",
+  foreignKey: { allowNull: true },
+  onDelete: "CASCADE",
+});
+db.order.belongsTo(db.user, {
+  as: "user",
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 

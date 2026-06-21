@@ -16,6 +16,15 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING(25),
             allowNull: false,
         },
-    });
+        },
+        {
+            indexes: [
+                {
+                    unique: true,
+                    fields: ['eventId', 'seatId']
+                }
+            ]
+        }
+    );
     return Ticket;
 };
