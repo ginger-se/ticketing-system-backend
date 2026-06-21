@@ -63,7 +63,7 @@ exports.create = async (req, res) => {
     date: req.body.date,
   };
   
-  if(req.body.date && req.body.RecurrenceEnd){
+  if(req.body.Days && req.body.RecurrenceEnd){
     let current = new Date(req.body.date);
     let end = new Date(req.body.RecurrenceEnd);
     let count = 0;
