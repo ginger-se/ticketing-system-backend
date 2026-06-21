@@ -12,7 +12,12 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     orderStatus: {
       type: Sequelize.STRING,
       allowNull: false,
-    }
-  });
+    },
+    email: {
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+  }
+);
   return Order;
 };
