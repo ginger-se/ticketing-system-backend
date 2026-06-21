@@ -76,27 +76,39 @@ exports.findAll = async (req, res) => {
 };
 // Retrieve all Tickets for a user
 exports.findForUser = async (req, res) => {
-    const userId = req.params.userId;
+  const userId = req.params.userId;
   try {
     const data = await Ticket.findAll({
-        include: [
-            { model: db.payment,
-                required: true,
-                attributes: ['amount', 'paymentStatus'],
-                include:[
-                    {
-                        model: db.user,
-                        as: "user",
-                        required: true,
-                        attributes: ['firstName', 'lastName', 'email'],
-                        where: {
-                            id: userId
-                        }
-                    },
-                ]
-            , as: "payment"
-            }
-        ],
+      include: [
+        {
+          model: db.order,
+          as: "order",
+          required: true,
+          where: { userId: userId },
+        },
+        {
+          model: db.event,
+          as: "event",
+          required: true,
+          attributes: ["startTime", "endTime", "status"],
+          include: [
+            {
+              model: db.show,
+              as: "show",
+              attributes: ["title"],
+            },
+          ],
+        },
+        {
+          model: db.seat,
+          as: "seat",
+        },
+        {
+          model: db.payment,
+          as: "payment",
+          attributes: ["id"],
+        },
+      ],
     });
     res.send(data);
   } catch (err) {
