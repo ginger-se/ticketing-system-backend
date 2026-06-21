@@ -21,6 +21,10 @@ exports.create = async (req, res) => {
     const error = new Error("seat Ids cannot be empty for order!");
     error.statusCode = 400;
     throw error;
+  } else if (req.body.email === undefined) {
+    const error = new Error("email cannot be empty for order!");
+    error.statusCode = 400;
+    throw error;
   }
 
   try {
@@ -29,7 +33,8 @@ exports.create = async (req, res) => {
         {
           userId: req.body.userId,
           totalAmount: req.body.totalAmount,
-          orderStatus: "Completed"
+          orderStatus: "Completed",
+          email: req.body.email
         },
         { transaction: t},
       );
