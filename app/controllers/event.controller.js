@@ -1,6 +1,7 @@
 const db = require("../models");
 const Event = db.event;
 const Op = db.Sequelize.Op;
+const Sequelize = db.Sequelize;
 
 // Create and Save an event
 exports.create = async (req, res) => {
@@ -83,6 +84,10 @@ exports.findAll = async (req, res) => {
 
   try {
     const data = await Event.findAll({
+      attributes: [
+        'id','date',[Sequelize.fn('TIME_FORMAT', Sequelize.col('startTime'), '%h:%i %p'), 'startTime'],[Sequelize.fn('TIME_FORMAT', Sequelize.col('endTime'), '%h:%i %p'), 'endTime'],
+        'status', 'capacity', 'createdAt', 'updatedAt', 'showId',
+      ],
       where: condition,
       order: [["date", "ASC"]],
       include: [{ model: db.show, as: "show" }],
@@ -101,6 +106,10 @@ exports.findOne = async (req, res) => {
 
   try {
     const data = await Event.findByPk(id, {
+      attributes: [
+        'id','date',[Sequelize.fn('TIME_FORMAT', Sequelize.col('startTime'), '%h:%i %p'), 'startTime'],[Sequelize.fn('TIME_FORMAT', Sequelize.col('endTime'), '%h:%i %p'), 'endTime'],
+        'status', 'capacity', 'createdAt', 'updatedAt', 'showId',
+      ],
       include: [{ model: db.show, as: "show" }],
     });
     res.send(data);
@@ -162,6 +171,10 @@ exports.findToday = async (req, res) => {
 
   try {
     const data = await Event.findAll({
+      attributes: [
+        'id','date',[Sequelize.fn('TIME_FORMAT', Sequelize.col('startTime'), '%h:%i %p'), 'startTime'],[Sequelize.fn('TIME_FORMAT', Sequelize.col('endTime'), '%h:%i %p'), 'endTime'],
+        'status', 'capacity', 'createdAt', 'updatedAt', 'showId',
+      ],
       where: {
         date: currentDate
       },
