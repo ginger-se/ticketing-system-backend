@@ -75,6 +75,25 @@ exports.findOne = async (req, res) => {
   }
 };
 
+// Find all the taken seats for an event
+exports.findTakenSeats = async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const seats = await db.ticket.findAll({
+      where: { eventId: id},
+      attributes: ['seatId']
+    });
+
+    const takenSeats = seats.map(seat => seat.seatId);
+    res.send(takenSeats);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "An error occurred while retrieving all taken seats.",
+    });
+  }
+};
+
 // Update an Event by the id in the request
 exports.update = async (req, res) => {
   const id = req.params.id;
