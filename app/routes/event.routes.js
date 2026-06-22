@@ -16,8 +16,11 @@ module.exports = (app) => {
   // Retrieve a single event with id 
   router.get("/events/:id", Event.findOne);
 
-  // Retrieve all the seats tied to one event
+  // Retrieve all the seats tied to an event
   router.get("/events/:id/seats/taken", Event.findTakenSeats)
+
+  // Reserve seats tied to an event
+  router.post("/events/:id/reservations", Event.createReservation)
 
   // Update an event with id
   router.put("/events/:id", [authenticateRoute, isAdmin], Event.update);
