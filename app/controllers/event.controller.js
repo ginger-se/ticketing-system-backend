@@ -10,15 +10,7 @@ exports.create = async (req, res) => {
       message: "Start Time cannot be empty for event!",
     });
     return;
-    res.status(400).send({
-      message: "Start Time cannot be empty for event!",
-    });
-    return;
   } else if (req.body.endTime == undefined) {
-    res.status(400).send({
-      message: "End time cannot be empty for event",
-    });
-    return;
     res.status(400).send({
       message: "End time cannot be empty for event",
     });
@@ -28,20 +20,7 @@ exports.create = async (req, res) => {
       message: "Capacity cannot be empty for event!",
     });
     return;
-    res.status(400).send({
-      message: "Capacity cannot be empty for event!",
-    });
-    return;
   } else if (req.body.showId == undefined) {
-     res.status(400).send({
-      message: "Show ID cannot be empty for event!",
-    });
-    return;
-  } else if (req.body.date == undefined) {
-     res.status(400).send({
-      message: "date cannot be empty for event!",
-    });
-    return;
      res.status(400).send({
       message: "Show ID cannot be empty for event!",
     });
@@ -59,7 +38,6 @@ exports.create = async (req, res) => {
     status: req.body.status || "Scheduled",
     capacity: req.body.capacity,
     showId: req.body.showId,
-    date: req.body.date,
     date: req.body.date,
   };
   
