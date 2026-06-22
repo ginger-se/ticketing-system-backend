@@ -25,11 +25,5 @@ module.exports = (app) => {
   // Cancel an event
   router.put("/events/:id/cancel", [authenticateRoute, isAdmin], Event.cancel);
 
-  // Delete an event with id
-  router.delete("/events/:id", [authenticateRoute, isAdmin], Event.delete);
-
-  // Delete all events
-  router.delete("/events/", [authenticateRoute, isAdmin], Event.deleteAll);
-
   app.use("/museumapi", router);
-};
+}; 

@@ -90,7 +90,6 @@ exports.findAll = async (req, res) => {
             {
               model: db.user,
               as: "user",
-              required: true,
               attributes: ['firstName', 'lastName', 'email']
             },
           ]
@@ -153,11 +152,14 @@ exports.findOne = async (req, res) => {
             {
               model: db.user,
               as: "user",
-              required: true,
               attributes: ['firstName', 'lastName', 'email'],
             },
           ]
           , as: "orderPayments"
+        },
+        {
+          model: db.ticket,
+          as: "orderTickets"
         }
       ],
     });

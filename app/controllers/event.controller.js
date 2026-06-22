@@ -1,25 +1,35 @@
 const db = require("../models");
 const Event = db.event;
 const Op = db.Sequelize.Op;
+const Sequelize = db.Sequelize;
 
 // Create and Save an event
 exports.create = async (req, res) => {
   if (req.body.startTime === undefined) {
-    const error = new Error("Start Time cannot be empty for event!");
-    error.statusCode = 400;
-    throw error;
+    res.status(400).send({
+      message: "Start Time cannot be empty for event!",
+    });
+    return;
   } else if (req.body.endTime == undefined) {
-    const error = new Error("End time cannot be empty for event");
-    error.statusCode = 400;
-    throw error;
+    res.status(400).send({
+      message: "End time cannot be empty for event",
+    });
+    return;
   } else if (req.body.capacity == undefined) {
-    const error = new Error("Capacity cannot be empty for event!");
-    error.statusCode = 400;
-    throw error;
+    res.status(400).send({
+      message: "Capacity cannot be empty for event!",
+    });
+    return;
   } else if (req.body.showId == undefined) {
-    const error = new Error("Show ID cannot be empty for event!");
-    error.statusCode = 400;
-    throw error;
+     res.status(400).send({
+      message: "Show ID cannot be empty for event!",
+    });
+    return;
+  } else if (req.body.date == undefined) {
+     res.status(400).send({
+      message: "date cannot be empty for event!",
+    });
+    return;
   }
 
   const event = {
@@ -28,15 +38,42 @@ exports.create = async (req, res) => {
     status: req.body.status || "Scheduled",
     capacity: req.body.capacity,
     showId: req.body.showId,
+    date: req.body.date,
   };
+  
+  if(req.body.Days && req.body.RecurrenceEnd){
+    let current = new Date(req.body.date);
+    let end = new Date(req.body.RecurrenceEnd);
+    let count = 0;
+    while(current <= end){
+      if (req.body.Days.includes(current.getDay())){
 
-  try {
-    const data = await Event.create(event);
-    res.send(data);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Some error occurred while creating the Event.",
+        event.date = current;
+        try {
+          await Event.create(event);
+          count++;
+        } catch (err) {
+          res.status(500).send({
+            message: err.message || "Some error occurred while creating the Event.",
+          });
+          return;  
+        }
+      }
+      current.setDate(current.getDate() + 1);
+    }
+    res.send({
+      message: count + " Events created Successfully",
     });
+    return;
+  }else {
+    try {
+      const data = await Event.create(event);
+      res.send(data);
+    } catch (err) {
+      res.status(500).send({
+        message: err.message || "Some error occurred while creating the Event.",
+      });
+    }
   }
 };
 
@@ -47,8 +84,12 @@ exports.findAll = async (req, res) => {
 
   try {
     const data = await Event.findAll({
+      attributes: [
+        'id','date',[Sequelize.fn('TIME_FORMAT', Sequelize.col('startTime'), '%h:%i %p'), 'startTime'],[Sequelize.fn('TIME_FORMAT', Sequelize.col('endTime'), '%h:%i %p'), 'endTime'],
+        'status', 'capacity', 'createdAt', 'updatedAt', 'showId',
+      ],
       where: condition,
-      order: [["startTime", "ASC"]],
+      order: [["date", "ASC"]],
       include: [{ model: db.show, as: "show" }],
     });
     res.send(data);
@@ -65,6 +106,10 @@ exports.findOne = async (req, res) => {
 
   try {
     const data = await Event.findByPk(id, {
+      attributes: [
+        'id','date',[Sequelize.fn('TIME_FORMAT', Sequelize.col('startTime'), '%h:%i %p'), 'startTime'],[Sequelize.fn('TIME_FORMAT', Sequelize.col('endTime'), '%h:%i %p'), 'endTime'],
+        'status', 'capacity', 'createdAt', 'updatedAt', 'showId',
+      ],
       include: [{ model: db.show, as: "show" }],
     });
     res.send(data);
@@ -139,55 +184,18 @@ exports.cancel = async (req, res) => {
   }
 };
 
-// Delete an Event with the specified id
-exports.delete = async (req, res) => {
-  const id = req.params.id;
-
-  try {
-    const number = await Event.destroy({
-      where: { id: id },
-    });
-    if (number == 1) {
-      res.send({ message: "Event was deleted successfully!" });
-    } else {
-      res.send({
-        message: `Cannot delete Event with id=${id}. Maybe Event was not found!`,
-      });
-    }
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Could not delete Event with id=" + id,
-    });
-  }
-};
-
-// Delete all Events from the database
-exports.deleteAll = async (req, res) => {
-  try {
-    const number = await Event.destroy({
-      where: {},
-      truncate: false,
-    });
-    res.send({ message: `${number} Events were deleted successfully!` });
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Some error occurred while removing all events.",
-    });
-  }
-};
-
 // Retrieve events for today
 exports.findToday = async (req, res) => {
-  const today = new Date();
-  const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
-  const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+  const currentDate = new Date().toISOString().split('T')[0]; 
 
   try {
     const data = await Event.findAll({
+      attributes: [
+        'id','date',[Sequelize.fn('TIME_FORMAT', Sequelize.col('startTime'), '%h:%i %p'), 'startTime'],[Sequelize.fn('TIME_FORMAT', Sequelize.col('endTime'), '%h:%i %p'), 'endTime'],
+        'status', 'capacity', 'createdAt', 'updatedAt', 'showId',
+      ],
       where: {
-        startTime: {
-          [Op.between]: [startOfDay, endOfDay],
-        },
+        date: currentDate
       },
       order: [["startTime", "ASC"]],
       include: [{ model: db.show, as: "show" }],
