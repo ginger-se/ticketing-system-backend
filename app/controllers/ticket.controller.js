@@ -77,6 +77,7 @@ exports.findAll = async (req, res) => {
 // Retrieve all Tickets for a user
 exports.findForUser = async (req, res) => {
   const userId = req.params.userId;
+  const Sequelize = db.Sequelize;
   try {
     const data = await Ticket.findAll({
       include: [
@@ -90,7 +91,14 @@ exports.findForUser = async (req, res) => {
           model: db.event,
           as: "event",
           required: true,
-          attributes: ["startTime", "endTime", "status"],
+          attributes: [
+            "id",
+            "date",
+            "status",
+            "capacity",
+            [Sequelize.fn('TIME_FORMAT', Sequelize.col('event.startTime'), '%h:%i %p'), 'startTime'],
+            [Sequelize.fn('TIME_FORMAT', Sequelize.col('event.endTime'), '%h:%i %p'), 'endTime'],
+          ],
           include: [
             {
               model: db.show,
