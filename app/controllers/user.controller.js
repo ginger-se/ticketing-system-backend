@@ -93,7 +93,10 @@ exports.findAll = async (req, res) => {
   var condition = id ? { id: { [Op.like]: `%${id}%` } } : null;
 
   try {
-    const data = await User.findAll({ where: condition });
+    const data = await User.findAll({
+      where: condition,
+      attributes: { exclude: ["password", "salt"] },
+    });
     res.send(data);
   } catch (err) {
     res.status(500).send({
@@ -151,8 +154,12 @@ exports.findByEmail = async (req, res) => {
 exports.update = async (req, res) => {
   const id = req.params.id;
 
+  const { firstName, lastName, email, phoneNumber, userType } = req.body;
+  const updateData = { firstName, lastName, email, phoneNumber, userType };
+  Object.keys(updateData).forEach(key => updateData[key] === undefined && delete updateData[key]);
+
   try {
-    const number = await User.update(req.body, {
+    const number = await User.update(updateData, {
       where: { id: id },
     });
     if (number == 1) {
