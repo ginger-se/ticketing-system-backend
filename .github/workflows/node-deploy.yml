@@ -1,5 +1,4 @@
 name: AWS DEPLOY TO STAGING
-# turn off deploy to AWS
 
 on:
   pull_request:
@@ -23,7 +22,9 @@ jobs:
         with:
           ref: feature/jw-githubActions
       - uses: actions/setup-node@v3
-      - run: npm install
+        with:
+          node-version: 22
+      - run: npm ci
 
       - run: |
           touch .env
@@ -54,11 +55,10 @@ jobs:
           debug: false
           command: |
             cd nodeapps/ticketing-system-backend
-            npm ci
-            sudo systemctl stop ticketing-system-backend
             sudo cp ticketing-system-backend.service /lib/systemd/system/ticketing-system-backend.service
             sudo systemctl daemon-reload
-            sudo systemctl start ticketing-system-backend
+            sudo systemctl enable ticketing-system-backend
+            sudo systemctl restart ticketing-system-backend
             sleep 3
             sudo systemctl is-active --quiet ticketing-system-backend \
               || { echo "=== service failed to start ==="; sudo journalctl -u ticketing-system-backend -n 80 --no-pager; exit 1; }
