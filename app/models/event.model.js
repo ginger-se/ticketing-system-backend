@@ -2,7 +2,7 @@ module.exports= (sequelize, Sequelize) =>{
     const Event = sequelize.define("event", {
         date: {
             type: Sequelize.DATEONLY,
-            allowNull: false
+            allowNull: false,
         },
         startTime: {
             type: Sequelize.TIME,

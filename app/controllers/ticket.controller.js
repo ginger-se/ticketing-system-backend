@@ -252,7 +252,7 @@ exports.adminRefundTicket = async (req, res) => {
     const newAmount = parseFloat(payment.amount) - parseFloat(refundAmount);
 
     await ticket.destroy({ transaction: t });
-    await payment.update({ amount: newAmount }, { transaction: t });
+    await payment.update({ amount: newAmount, paymentStatus: "Refunded" }, { transaction: t });
 
     await t.commit();
     res.send({ message: "Ticket reservation deleted and payment updated successfully.", newPaymentAmount: newAmount });
