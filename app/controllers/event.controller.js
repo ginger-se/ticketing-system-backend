@@ -132,8 +132,25 @@ exports.findTakenSeats = async (req, res) => {
       attributes: ['seatId']
     });
 
-    const takenSeats = seats.map(seat => seat.seatId);
-    res.send(takenSeats);
+    const takenSeats = seats.map(seat => seat.id);
+
+    const reservedSeats = await ReservationSeat.findAll({
+      attributes: ['seatId'],
+      include: [
+        { 
+          model: Reservation,
+          required: true,
+          attributes: ['expirationTime', 'reservationStatus'],
+          as: "reservation",
+          where: { eventId: id, 'reservationStatus': "pending", 'expirationTime': { [Op.gt]: new Date() } },
+        }
+      ],
+    });
+
+    const reservedIds = reservedSeats.map(seat => seat.id)
+    const mergedSeats = takenSeats.concat(reservedIds);
+    // We need to merge the two lists and put that in the response
+    res.send(mergedSeats);
   } catch (err) {
     res.status(500).send({
       message: err.message || "An error occurred while retrieving all taken seats.",

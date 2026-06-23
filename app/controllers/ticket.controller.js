@@ -196,7 +196,7 @@ exports.checkIn = async (req, res) => {
 
       ticket.ticketStatus = "CheckedIn";
       await ticket.save();
-      res.send({message: "Checked in sucessfully! " + "Row Number: " + ticket.seat.rowNumber + " Seat number: " + ticket.seat.seatNumber });
+      res.send({message: "Checked in successfully! " + "Row Number: " + ticket.seat.rowNumber + " Seat number: " + ticket.seat.seatNumber });
     }
   } catch (err) {
     res.status(500).send({
