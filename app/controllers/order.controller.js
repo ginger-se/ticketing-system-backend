@@ -2,31 +2,42 @@ const { sendOrderConfirmationEmail } = require('../services/emailService');
 const db = require("../models");
 const Order = db.order;
 const Payment = db.payment;
+const Reservation = db.reservation;
 const Ticket = db.ticket;
 
 // Create and Save an order
 exports.create = async (req, res) => {
   if (req.body.eventId === undefined) {
-    const error = new Error("eventId cannot be empty for order!");
-    error.statusCode = 400;
-    throw error;
+    res.status(400).send({
+      message: "eventId cannot be empty for order!",
+    });
+    return;
   } else if (req.body.totalAmount === undefined) {
-    const error = new Error("totalAmount cannot be empty for order!");
-    error.statusCode = 400;
-    throw error;
+    res.status(400).send({
+      message: "totalAmount cannot be empty for order!",
+    });
+    return;
   } else if (req.body.paymentMethod === undefined) {
-    const error = new Error("paymentMethod cannot be empty for order!");
-    error.statusCode = 400;
-    throw error;
+    res.status(400).send({
+      message: "paymentMethod cannot be empty for order!",
+    });
+    return;
   } else if (req.body.seatIds === undefined) {
-    const error = new Error("seat Ids cannot be empty for order!");
-    error.statusCode = 400;
-    throw error;
+    res.status(400).send({
+      message: "seat Ids cannot be empty for order!",
+    });
+    return;
   } else if (req.body.email === undefined) {
-    const error = new Error("email cannot be empty for order!");
-    error.statusCode = 400;
-    throw error;
-  }
+    res.status(400).send({
+      message: "email cannot be empty for order!",
+    });
+    return;
+  } else if (req.body.reservationId === undefined) {
+    res.status(400).send({
+      message: "reservationId cannot be empty for order!",
+    });
+    return;
+  }  
 
   try {
     const result = await db.sequelize.transaction(async t => {
@@ -68,6 +79,16 @@ exports.create = async (req, res) => {
         ticket.QRCode += ticket.id;
         await ticket.save({ transaction: t });
       }
+
+      await Reservation.update(
+        { 
+          reservationStatus: "confirmed" 
+        },
+        {
+          where: { id: req.body.reservationId },
+          transaction: t
+        }
+      );
       return order;
     });
     res.send(result);

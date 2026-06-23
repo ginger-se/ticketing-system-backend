@@ -102,7 +102,7 @@ db.user.hasMany(db.reservation, {
 });
 db.reservation.belongsTo(db.user, {
   as: "user",
-  foreignKey: { allowNull: false },
+  foreignKey: { allowNull: true },
   onDelete: "CASCADE",
 });
 db.event.hasMany(db.reservation, {

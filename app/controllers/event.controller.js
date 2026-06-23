@@ -2,6 +2,8 @@ const db = require("../models");
 const Event = db.event;
 const Op = db.Sequelize.Op;
 const Sequelize = db.Sequelize;
+const Reservation = db.reservation;
+const ReservationSeat = db.reservationSeat;
 
 // Create and Save an event
 exports.create = async (req, res) => {
@@ -131,10 +133,55 @@ exports.findTakenSeats = async (req, res) => {
     });
 
     const takenSeats = seats.map(seat => seat.seatId);
-    res.send(takenSeats);
+
+    const reservedSeats = await ReservationSeat.findAll({
+      attributes: ['seatId'],
+      include: [
+        { 
+          model: Reservation,
+          required: true,
+          attributes: ['expirationTime', 'reservationStatus'],
+          as: "reservation",
+          where: { eventId: id, 'reservationStatus': "pending", 'expirationTime': { [Op.gt]: new Date() } },
+        }
+      ],
+    });
+
+    const reservedIds = reservedSeats.map(seat => seat.seatId)
+    const mergedSeats = takenSeats.concat(reservedIds);
+    res.send(mergedSeats);
   } catch (err) {
     res.status(500).send({
       message: err.message || "An error occurred while retrieving all taken seats.",
+    });
+  }
+};
+
+// Reserve seats tied to an event
+exports.createReservation = async (req, res) => {
+  const id = req.params.id;
+  const seats = req.body.seats;
+  const currentTime = new Date();
+  const expTime = new Date(currentTime.setMinutes(currentTime.getMinutes() + 10));
+
+  try {
+    const newReservation = await Reservation.create(
+      {
+        expirationTime: expTime,
+        eventId: id
+      },
+    );
+
+    const reservedSeats = seats.map(seat => ({
+      reservationId: newReservation.id,
+      seatId: seat
+    }));
+
+    await ReservationSeat.bulkCreate(reservedSeats);
+    res.status(200).send({ reservationId: newReservation.id });
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || "An error occurred creating the reservation.",
     });
   }
 };
