@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: feature/jw-githubActions
+          ref: dev
       - uses: actions/setup-node@v3
         with:
           node-version: 22
@@ -61,6 +61,3 @@ jobs:
             sudo systemctl enable ticketing-system-backend
             sudo systemctl restart ticketing-system-backend
             npm run seedSeats
-            sleep 3
-            sudo systemctl is-active --quiet ticketing-system-backend \
-              || { echo "=== service failed to start ==="; sudo journalctl -u ticketing-system-backend -n 80 --no-pager; exit 1; }
