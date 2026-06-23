@@ -60,4 +60,3 @@ jobs:
             sudo systemctl daemon-reload
             sudo systemctl enable ticketing-system-backend
             sudo systemctl restart ticketing-system-backend
-            npm run seedSeats
