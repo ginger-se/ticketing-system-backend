@@ -24,8 +24,6 @@ jobs:
           ref: dev
       - uses: actions/setup-node@v3
       - run: npm install
-        with:
-          node-version: '18'  
 
       - run: |
           touch .env
