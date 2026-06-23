@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize, DataTypes, Model) => {
         requestDate:{
           type: DataTypes.DATE,
           allowNull: false,
-          DefaultValue: DataTypes.NOW
+          defaultValue: DataTypes.NOW
         },
         processedDate:{
           type: DataTypes.DATE,
