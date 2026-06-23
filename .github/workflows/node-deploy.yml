@@ -53,9 +53,7 @@ jobs:
           debug: false
           command: |
             cd nodeapps/ticketing-system-backend
-            sudo systemctl stop mysql
             npm ci
-            sudo systemctl start mysql
             sudo systemctl stop ticketing-system-backend
             sudo cp ticketing-system-backend.service /lib/systemd/system/ticketing-system-backend.service
             sudo systemctl daemon-reload
