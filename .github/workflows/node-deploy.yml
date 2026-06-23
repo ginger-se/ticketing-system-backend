@@ -1,11 +1,11 @@
 name: AWS DEPLOY TO STAGING
-# turn off deploy to AWS
 
 on:
   pull_request:
     types: [closed]
     branches:
       - dev
+  workflow_dispatch:
 
 jobs:
   aws-deploy:
@@ -21,16 +21,19 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: dev
-      - uses: actions/setup-node@v1
-      - run: npm install
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 22
+      - run: npm ci
 
       - run: |
-          touch .env
-          echo DB_HOST = "$DB_HOST" >> .env
-          echo DB_PW = "$DB_PW" >> .env
-          echo DB_USER = "$DB_USER" >> .env
-          echo DB_NAME = "$DB_NAME" >> .env
-          echo SECRET_KEY = "$SECRET_KEY" >> .env
+          {
+            echo "DB_HOST='$DB_HOST'"
+            echo "DB_PW='$DB_PW'"
+            echo "DB_USER='$DB_USER'"
+            echo "DB_NAME='$DB_NAME'"
+            echo "SECRET_KEY='$SECRET_KEY'"
+          } > .env
 
       - run: npm run bundle
 
@@ -53,10 +56,7 @@ jobs:
           debug: false
           command: |
             cd nodeapps/ticketing-system-backend
-            sudo systemctl stop mysql
-            npm ci
-            sudo systemctl start mysql
-            sudo systemctl stop ticketing-system-backend
             sudo cp ticketing-system-backend.service /lib/systemd/system/ticketing-system-backend.service
             sudo systemctl daemon-reload
-            sudo systemctl start ticketing-system-backend
+            sudo systemctl enable ticketing-system-backend
+            sudo systemctl restart ticketing-system-backend

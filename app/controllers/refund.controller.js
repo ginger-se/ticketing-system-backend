@@ -75,21 +75,20 @@ exports.findForUser = async (req, res) => {
         {
           model: db.payment,
           required: true,
-          attributes: ["amount", "paymentStatus"],
+          as: "payment",
+          where: { userId: userId },
+          attributes: ["id", "amount", "paymentStatus"],
           include: [
             {
               model: db.user,
               as: "user",
               required: true,
               attributes: ["firstName", "lastName", "email"],
-              where: {
-                id: userId,
-              },
             },
           ],
-          as: "payment",
         },
       ],
+      order: [["requestDate", "DESC"]],
     });
     res.send(data);
   } catch (err) {

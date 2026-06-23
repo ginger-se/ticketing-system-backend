@@ -31,8 +31,14 @@ exports.getReport = async (req, res) => {
                 { model: db.ticket, as: "eventTickets", attributes: ["id"] }
             ]
         });
-
-        res.send({ totalRevenue, ticketsSold, avgOccupancy, refundsIssued, events });
+        const payments = await db.payment.findAll({
+            include: [
+                { model: db.user, as: "user", attributes: ["firstName", "lastName"] },
+                { model: db.refund, as: "refunds", attributes: ["id"] }
+            ],
+            order: [["paymentDate", "DESC"]]
+        });
+        res.send({ totalRevenue, ticketsSold, avgOccupancy, refundsIssued, events, payments });
     } catch (err) {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving report."

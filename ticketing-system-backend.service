@@ -6,8 +6,9 @@ After=network.target
 Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/nodeapps/ticketing-system-backend/
-ExecStart=/usr/bin/npm run start
+ExecStart=/bin/bash -lc 'npm run start'
 Restart=on-failure
+RestartSec=5
  
 [Install]
 WantedBy=multi-user.target
