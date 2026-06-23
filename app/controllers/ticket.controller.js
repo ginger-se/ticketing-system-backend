@@ -28,10 +28,10 @@ exports.create = async (req, res) => {
     eventId: req.body.eventId ,
     paymentId: req.body.paymentId,
     seatId: req.body.seatId,
-
+    orderId: req.body.orderId,
   };
 
-  ticket.QRCode = "http://localhost:3200/museumapi/tickets/checkin/";
+  ticket.QRCode = "http://ec2-54-210-64-62.compute-1.amazonaws.com/museumapi/tickets/checkin/";
   ticket.purchaseDate = Date.now();
 
   try {

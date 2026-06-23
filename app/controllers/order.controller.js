@@ -65,7 +65,7 @@ exports.create = async (req, res) => {
       for (const seatId of req.body.seatIds) {
         let ticket = await Ticket.create(
           {
-            QRCode: "http://localhost:3200/museumapi/tickets/checkin/",
+            QRCode: "http://ec2-54-210-64-62.compute-1.amazonaws.com/museumapi/tickets/checkin/",
             ticketType: "General Admission",
             ticketStatus: "Valid",
             purchaseDate: Date.now(),
