@@ -56,6 +56,7 @@ jobs:
           debug: false
           command: |
             cd nodeapps/ticketing-system-backend
+            npm i
             sudo cp ticketing-system-backend.service /lib/systemd/system/ticketing-system-backend.service
             sudo systemctl daemon-reload
             sudo systemctl enable ticketing-system-backend
