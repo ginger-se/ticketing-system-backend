@@ -132,7 +132,7 @@ exports.findTakenSeats = async (req, res) => {
       attributes: ['seatId']
     });
 
-    const takenSeats = seats.map(seat => seat.seat.id);
+    const takenSeats = seats.map(seat => seat.id);
 
     const reservedSeats = await ReservationSeat.findAll({
       attributes: ['seatId'],
@@ -147,7 +147,7 @@ exports.findTakenSeats = async (req, res) => {
       ],
     });
 
-    const reservedIds = reservedSeats.map(seat => seat.seat.id)
+    const reservedIds = reservedSeats.map(seat => seat.id)
     const mergedSeats = takenSeats.concat(reservedIds);
     res.send(mergedSeats);
   } catch (err) {
