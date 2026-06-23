@@ -55,7 +55,7 @@ jobs:
           privateKey: ${{ secrets.SERVER_SSH_KEY }}
           debug: false
           command: |
-            sudo systemctl stop mysql
+            sudo systemctl start mysql
             cd nodeapps/ticketing-system-backend
             sudo cp ticketing-system-backend.service /lib/systemd/system/ticketing-system-backend.service
             sudo systemctl daemon-reload
