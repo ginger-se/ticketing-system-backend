@@ -16,7 +16,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING(25),
             allowNull: false,
         },
-        },
+         },
         {
             indexes: [
                 {

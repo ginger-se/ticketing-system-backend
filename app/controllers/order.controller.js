@@ -1,3 +1,4 @@
+const { sendOrderConfirmationEmail } = require('../services/emailService');
 const db = require("../models");
 const Order = db.order;
 const Payment = db.payment;
@@ -70,6 +71,39 @@ exports.create = async (req, res) => {
       return order;
     });
     res.send(result);
+        // Send confirmation email (non-blocking)
+    try {
+      const [event, tickets] = await Promise.all([
+        db.event.findByPk(req.body.eventId, {
+          include: [{ model: db.show, as: 'show', attributes: ['title'] }]
+        }),
+        db.ticket.findAll({
+          where: { orderId: result.id },
+          include: [{ model: db.seat, as: 'seat', attributes: ['rowNumber', 'seatNumber'] }]
+        })
+      ]);
+
+      const formattedTickets = tickets.map(t => ({
+        seatLabel: `${t.seat.rowNumber}${t.seat.seatNumber}`,
+        ticketType: t.ticketType,
+        qrCode: t.QRCode,
+      }));
+
+      const eventDate = new Date(event.date).toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC'
+      });
+
+      await sendOrderConfirmationEmail(req.body.email, {
+        orderId: result.id,
+        showTitle: event.show.title,
+        eventDate: eventDate,
+        eventTime: event.startTime,
+        tickets: formattedTickets,
+        totalAmount: req.body.totalAmount,
+      });
+    } catch (emailErr) {
+      console.error('Could not send confirmation email:', emailErr);
+    }
   } catch (err) {
     console.log(err);
     res.status(500).send({
