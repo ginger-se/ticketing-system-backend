@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: dev
+          ref: feature/jw-githubActions
       - uses: actions/setup-node@v3
       - run: npm install
 
